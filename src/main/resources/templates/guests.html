@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <meta charset="UTF-8">
+        <title>Guests</title>
+    </head>
+    <body>
+        <h1>Guests</h1>
+        <h2 th:text="'Date: ' + ${date}">Date</h2>
+        <h2 th:text="'Guest last name(s) like: ' + ${searchString}">Date</h2>
+        
+        <table>
+            <thead>
+            <tr>
+                <th>Last name</th>
+                <th>First name</th>
+                <th>Email address</th>
+                <th>Phone number</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="guest: ${guests}">
+                <td th:text="${guest.lastName}">Last name</td>
+                <td th:text="${guest.firstName}">First namer</td>
+                <td th:text="${guest.emailAddress}">Email address</td>
+                <td th:text="${guest.phoneNumber}">Phone Number</td>
+            </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td rowspan="4" th:text="'Count: ' + ${guestCount}">Guest count</td>
+                </tr>
+            </tfoot>
+        </table>
+        
+    </body>
+</html>
