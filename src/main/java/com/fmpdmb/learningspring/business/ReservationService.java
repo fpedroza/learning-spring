@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.springframework.stereotype.Service;
@@ -70,20 +69,42 @@ public class ReservationService {
         return roomReservations;
     }
     
+    public List<Room> getRooms() {
+        log.info("get rooms");
+        return StreamSupport.stream(this.roomRepository.findAll().spliterator(), false)
+                .sorted(Comparator.comparing(Room::getRoomNumber))
+                .toList();
+    }
+    
     public List<Guest> getGuests(String fuzzyLastName) {
-        log.info("get guests");
+        log.info("get guests: {}", fuzzyLastName);
         
         List<Guest> guests = null;
         if (fuzzyLastName == null) {
             guests = StreamSupport.stream(this.guestRepository.findAll().spliterator(), false)
                     .sorted(Comparator.comparing(Guest::getLastName).thenComparing(Guest::getFirstName))
-                    .collect(Collectors.toList());
+                    .toList();
         }
         else {
             guests = this.guestRepository.findByLastNameContaining(fuzzyLastName);
         }
         
         return guests;
+    }
+    
+    public boolean addGuest(Guest guest) {
+        
+        Guest existingGuest = this.guestRepository.findByFirstNameAndLastName(guest.getFirstName(), guest.getLastName());
+        if (existingGuest == null) {
+            Guest savedGuest = this.guestRepository.save(guest);
+            log.info("new guest saved: {}", savedGuest);
+            return true;
+        }
+        else {
+            log.info("found existing guest {}", existingGuest);
+            return false;
+        }
+        
     }
 }
 

@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface GuestRepository extends CrudRepository<Guest, Long> {
     
     List<Guest> findByLastNameContaining(String lastName);
-
+        
+    Guest findByFirstNameAndLastName(String firstName, String lastName);
 }
